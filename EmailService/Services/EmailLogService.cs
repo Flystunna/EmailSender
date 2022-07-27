@@ -125,6 +125,7 @@ namespace EmailService.Services
                     Id = id,
                     To = model.Email,
                     Subject = subject,
+                    Response = "",
                     Body = body,
                     AppSource = model.AppSource,
                     EmailType = EmailType.NewUser
@@ -160,7 +161,7 @@ namespace EmailService.Services
             var emailLog = await _dbContext.EmailLog.FirstOrDefaultAsync(x => x.Id == emailId);
             if(emailLog != null)
             {
-                emailLog.Response = message;
+                emailLog.Response = message.Truncate(255);
                 await _dbContext.SaveChangesAsync();
             }
         }
