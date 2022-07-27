@@ -6,6 +6,6 @@ namespace EmailService.Interfaces
     {
         Task<bool> OnboardUser(OnboardUserDto model);
         Task<List<EmailLogDto>> GetAllLogs(FilterDto input);
-        Task<bool> Resend(ResendEmailDto id);
+        Task<Guid?> Resend(ResendEmailDto id);
     }
 }

@@ -49,8 +49,10 @@ namespace EmailService.Controllers
         {
             try
             {
-                await _emailLogService.Resend(model);
-                return Ok(true);
+                var resend = await _emailLogService.Resend(model);           
+                if (resend == null)
+                    return NotFound();                    
+                return Ok(resend);
             }
             catch (Exception e)
             {

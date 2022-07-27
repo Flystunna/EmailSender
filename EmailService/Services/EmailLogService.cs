@@ -21,12 +21,12 @@ namespace EmailService.Services
             _emailSender = emailSender;
             _config = config;
         }
-        public async Task<bool> Resend(ResendEmailDto input)
+        public async Task<Guid?> Resend(ResendEmailDto input)
         {
             var emailLog = await _dbContext.EmailLog.FirstOrDefaultAsync(x => x.Id == input.Id);
-            
+
             if (emailLog == null)
-                throw new Exception("Email Log Not Found");
+                return null;
             
             var replacement = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(emailLog.Body);
             if (replacement == null)
@@ -44,7 +44,7 @@ namespace EmailService.Services
             };
             await _emailSender.SendMailAsync(mail, replacement);
             await LogResponse(input.Id, "Success");
-            return true;
+            return input.Id;
         }
         public async Task<List<EmailLogDto>> GetAllLogs(FilterDto input)
         {
