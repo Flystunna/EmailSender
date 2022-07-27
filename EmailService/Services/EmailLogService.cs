@@ -21,6 +21,12 @@ namespace EmailService.Services
             _emailSender = emailSender;
             _config = config;
         }
+        /// <summary>
+        /// Resend a particular email log using the Guid
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<Guid?> Resend(ResendEmailDto input)
         {
             var emailLog = await _dbContext.EmailLog.FirstOrDefaultAsync(x => x.Id == input.Id);
@@ -46,6 +52,11 @@ namespace EmailService.Services
             await LogResponse(input.Id, "Success");
             return input.Id;
         }
+        /// <summary>
+        /// Get all email logs. Passcodes/Passwords are encrypted
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task<List<EmailLogDto>> GetAllLogs(FilterDto input)
         {
             var logs = await _dbContext.EmailLog
@@ -67,6 +78,12 @@ namespace EmailService.Services
                 To = x.To
             }).ToList();
         }
+        /// <summary>
+        /// Onboard user method to send email for onboarding new users
+        /// Passwords/Passcodes are generated using cryptography and encrypted when saving logs but decrypted when sending to user email
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<bool> OnboardUser(OnboardUserDto model)
         {
             var id = Guid.NewGuid();
@@ -132,6 +149,12 @@ namespace EmailService.Services
                 throw;
             }
         }
+        /// <summary>
+        /// Log response for email logs
+        /// </summary>
+        /// <param name="emailId"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private async Task LogResponse(Guid emailId, string message)
         {
             var emailLog = await _dbContext.EmailLog.FirstOrDefaultAsync(x => x.Id == emailId);
@@ -141,6 +164,11 @@ namespace EmailService.Services
                 await _dbContext.SaveChangesAsync();
             }
         }
+        /// <summary>
+        /// Get email template path based off app source
+        /// </summary>
+        /// <param name="appSource"></param>
+        /// <returns></returns>
         private string GetEmailPath(AppSource appSource)
         {
             if (appSource == AppSource.Mobile)

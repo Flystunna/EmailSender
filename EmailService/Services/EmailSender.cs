@@ -15,6 +15,10 @@ namespace EmailService.Services
         {
             _config = config;
         }
+        /// <summary>
+        /// Initialize SMTP Client
+        /// </summary>
+        /// <returns></returns>
         private SmtpClient GetSmtpClient()
         {
             var client = new SmtpClient
@@ -31,6 +35,13 @@ namespace EmailService.Services
                 client.Credentials = new NetworkCredential(_config["SMTP:Username"], _config["SMTP:Password"]);
             return client;
         }
+
+       /// <summary>
+       /// Send email async
+       /// </summary>
+       /// <param name="mail"></param>
+       /// <param name="replacements"></param>
+       /// <returns></returns>
 
         public async Task<bool> SendMailAsync(MailBase mail, Dictionary<string, string> replacements)
         {
